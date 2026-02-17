@@ -1,0 +1,127 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "corosexport"
+version = "0.1.0"
+description = "Coros activity exporter and backup tool for personal data archival"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "Apache-2.0" }
+authors = [
+    { name = "Your Name", email = "your.email@example.com" }
+]
+keywords = ["coros", "activity", "export", "backup", "fitness", "gpx", "tcx", "fit"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: Apache Software License",
+    "Natural Language :: English",
+    "Operating System :: MacOS",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Utilities",
+]
+
+dependencies = [
+    "requests>=2.31.0",
+    "python-dateutil>=2.8.2",
+    "click>=8.1.0",
+    "pydantic>=2.0.0",
+    "pydantic-settings>=2.0.0",
+    "bcrypt>=5.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+    "pytest-asyncio>=0.23.0",
+    "black>=23.0.0",
+    "ruff>=0.1.0",
+    "mypy>=1.5.0",
+    "types-requests>=2.31.0",
+    "types-python-dateutil>=2.8.0",
+]
+impersonate = [
+    "curl-cffi>=0.5.0",
+]
+
+[project.scripts]
+coros-backup = "corosexport.cli.backup:main"
+coros-get-activity = "corosexport.cli.get_activity:main"
+
+[dependency-groups]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-cov>=4.1.0",
+    "pytest-asyncio>=0.23.0",
+    "black>=23.0.0",
+    "ruff>=0.1.0",
+    "mypy>=1.5.0",
+    "types-requests>=2.31.0",
+    "types-python-dateutil>=2.8.0",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/corosexport"]
+
+[tool.black]
+line-length = 100
+target-version = ["py39"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py39"
+src = ["src"]
+
+[tool.ruff.lint]
+select = [
+    "E",    # pycodestyle errors
+    "W",    # pycodestyle warnings
+    "F",    # pyflakes
+    "I",    # isort
+    "C",    # flake8-comprehensions
+    "B",    # flake8-bugbear
+    "UP",   # pyupgrade
+]
+ignore = [
+    "E501",  # line-too-long (let black handle it)
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["corosexport"]
+
+[tool.mypy]
+python_version = "3.9"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
+check_untyped_defs = true
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+ignore_errors = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+addopts = "-v --cov=src/corosexport --cov-report=term-missing"
+
+[tool.coverage.run]
+source = ["src/corosexport"]
+omit = ["*/tests/*", "*/test_*.py"]
+
+[tool.coverage.report]
+precision = 2
+show_missing = true
+skip_covered = false
