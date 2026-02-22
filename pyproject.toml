@@ -31,11 +31,6 @@ classifiers = [
     "Topic :: Utilities",
 ]
 
-[project.urls]
-Homepage = "https://github.com/rbettermann/corosexport"
-Repository = "https://github.com/rbettermann/corosexport.git"
-Issues = "https://github.com/rbettermann/corosexport/issues"
-
 dependencies = [
     "requests>=2.31.0",
     "python-dateutil>=2.8.2",
@@ -44,6 +39,11 @@ dependencies = [
     "pydantic-settings>=2.0.0",
     "bcrypt>=5.0.0",
 ]
+
+[project.urls]
+Homepage = "https://github.com/rbettermann/corosexport"
+Repository = "https://github.com/rbettermann/corosexport.git"
+Issues = "https://github.com/rbettermann/corosexport/issues"
 
 [project.optional-dependencies]
 dev = [
