@@ -104,21 +104,17 @@ class BackupManager:
         }
         
         try:
-            # Fetch all activities from Coros
-            # Note: May need pagination if account has many activities
             all_activities = self.client.get_activities(limit=200)
             stats["activities_found"] = len(all_activities)
             
             logger.info(f"Found {len(all_activities)} total activities")
             
-            # Process each activity
             for activity in all_activities:
                 if activity.activity_id in self.state.downloaded_activity_ids:
                     logger.debug(f"Skipping already-backed-up activity {activity.activity_id}")
                     stats["activities_skipped"] += 1
                     continue
                 
-                # Download activity files
                 if self._download_activity_files(activity):
                     self.state.downloaded_activity_ids.add(activity.activity_id)
                     self.state.last_synced_activity_id = activity.activity_id

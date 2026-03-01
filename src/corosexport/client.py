@@ -120,11 +120,12 @@ class CorosClient:
         except requests.RequestException as e:
             raise CorosAuthError(f"Network error: {e}") from e
 
-    def get_activities(self, limit: int = 100) -> List[ActivitySummary]:
-        """Fetch activities using real endpoint."""
+    def get_activities(self, limit: int = 200) -> List[ActivitySummary]:
         if not self.accesstoken:
             raise CorosAPIError("Not authenticated. Call authenticate() first.")
         
+        limit = 200 if limit > 200 else limit
+
         params = {"size": limit, "pageNumber": 1, "modeList": ""}
         headers = {
             "accesstoken": self.accesstoken,
@@ -135,9 +136,22 @@ class CorosClient:
         
         data = response.json()
         self._check_api_response(data)
-        
+
+        total_pages = data.get("data", {}).get("totalPage", 1)
+
+        all_coros_activities = []
+        all_coros_activities.extend(data.get("data", {}).get("dataList", []))
+
+        for page in range(2, total_pages + 1):
+            params["pageNumber"] = page
+            response = self.session.get(ACTIVITIES_ENDPOINT, params=params, headers=headers)
+            response.raise_for_status()
+            data = response.json()
+            self._check_api_response(data)
+            all_coros_activities.extend(data.get("data", {}).get("dataList", []))
+
         activities = []
-        for act in data.get("data", {}).get("dataList", []):
+        for act in all_coros_activities:
             try:
                 summary = ActivitySummary(
                     activity_id=str(act["labelId"]),
