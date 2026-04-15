@@ -1,16 +1,21 @@
 # Changelog
 
-## [0.1.2] - 2025-03-01
+## [0.1.3] - 2026-04-15
+
+### Added
+- Support for more actity types (203 gravel biking, 400 gym cardio)
+
+## [0.1.2] - 2026-03-01
 
 ### Fixed
 - Activity list pagination - now correctly iterates over all pages instead of only the first page ([#2](https://github.com/rbettermann/corosexport/pull/2))
 
-## [0.1.1] - 2025-02-22
+## [0.1.1] - 2026-02-22
 
 ### Added
 - PyPI publishing workflow for automated releases
 
-## [0.1.0] - 2025-02-17
+## [0.1.0] - 2026-02-17
 
 ### Added
 - Initial release of Corosexport

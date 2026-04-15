@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "corosexport"
-version = "0.1.2"
+version = "0.1.3"
 description = "Coros activity exporter and backup tool for personal data archival"
 readme = "README.md"
 requires-python = ">=3.9"
@@ -43,6 +43,7 @@ dependencies = [
 [project.urls]
 Homepage = "https://github.com/rbettermann/corosexport"
 Repository = "https://github.com/rbettermann/corosexport.git"
+Changelog = "https://github.com/rbettermann/corosexport/blob/main/CHANGELOG.md"
 Issues = "https://github.com/rbettermann/corosexport/issues"
 
 [project.optional-dependencies]
