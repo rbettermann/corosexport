@@ -163,6 +163,10 @@ class CorosClient:
                     total_seconds=act.get("totalTime", 0),
                     distance_meters=float(act.get("distance", 0)) 
                 )
+
+                if summary.activity_type == ActivityType.OTHER:
+                    logger.warning(f"Unknown activity type code {act.get('sportType', 'N/A')} for activity {summary.activity_id}. This will probably cause issues when downloading files for this activity.")
+
                 activities.append(summary)
             except Exception as e:
                 logger.warning(f"Failed to parse activity: {e}")
