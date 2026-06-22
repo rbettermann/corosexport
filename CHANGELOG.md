@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.1.4] - 2026-05-29
+
+### Added
+- Support for more actity types (204 MTB, 10000 Triathlon)
+
 ## [0.1.3] - 2026-04-15
 
 ### Added
