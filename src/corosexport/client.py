@@ -10,11 +10,6 @@ from .models import ActivitySummary, ActivityType, ExportFormat
 
 logger = logging.getLogger(__name__)
 
-COROS_BASE_URL = "https://teameuapi.coros.com"
-AUTH_ENDPOINT = f"{COROS_BASE_URL}/account/login"
-ACTIVITIES_ENDPOINT = f"{COROS_BASE_URL}/activity/query"
-DOWNLOAD_ENDPOINT = f"{COROS_BASE_URL}/activity/detail/download"
-
 BROWSER_HEADERS = {
     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
     "Accept": "application/json, text/plain, */*",
@@ -54,9 +49,18 @@ def _compute_coros_bcrypt(password: str, *, salt: Optional[bytes] = None) -> tup
 
 
 class CorosClient:
-    def __init__(self, email: str, password: str, timeout: int = 30):
+    def __init__(
+        self,
+        email: str,
+        password: str,
+        base_url: str,
+        timeout: int = 30,
+    ):
         self.email = email
         self.password = password
+        self.auth_endpoint = f"{base_url}/account/login"
+        self.activities_endpoint = f"{base_url}/activity/query"
+        self.download_endpoint = f"{base_url}/activity/detail/download"
         self.timeout = timeout
         self.session = requests.Session()
         self.session.headers.update(BROWSER_HEADERS)
@@ -99,7 +103,7 @@ class CorosClient:
 
         try:
             response = self.session.post(
-                AUTH_ENDPOINT, json=payload, timeout=self.timeout
+                self.auth_endpoint, json=payload, timeout=self.timeout
             )
             response.raise_for_status()
 
@@ -131,7 +135,7 @@ class CorosClient:
             "accesstoken": self.accesstoken,
             "yfheader": f'{{"userId":"{self.user_id}"}}'
         }
-        response = self.session.get(ACTIVITIES_ENDPOINT, params=params, headers=headers)
+        response = self.session.get(self.activities_endpoint, params=params, headers=headers)
         response.raise_for_status()
         
         data = response.json()
@@ -144,7 +148,7 @@ class CorosClient:
 
         for page in range(2, total_pages + 1):
             params["pageNumber"] = page
-            response = self.session.get(ACTIVITIES_ENDPOINT, params=params, headers=headers)
+            response = self.session.get(self.activities_endpoint, params=params, headers=headers)
             response.raise_for_status()
             data = response.json()
             self._check_api_response(data)
@@ -185,7 +189,7 @@ class CorosClient:
             "accesstoken": self.accesstoken,
             "yfheader": f'{{"userId":"{self.user_id}"}}'
         }
-        response = self.session.get(DOWNLOAD_ENDPOINT, params=params, headers=headers)
+        response = self.session.get(self.download_endpoint, params=params, headers=headers)
         response.raise_for_status()
         
         # Check if response is JSON (error response) or binary (file content)
