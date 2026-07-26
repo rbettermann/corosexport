@@ -150,6 +150,8 @@ Options:
   --backup-dir TEXT     Directory to store activities (default: ./coros_activities)
   --email TEXT          Coros account email
   --password TEXT       Coros password (prompts if omitted for security)
+  --region [eu|us]      Coros account region (default: eu)
+  --base-url TEXT       Override the API host directly. Takes precedence over --region.
   --format TEXT         Export formats: fit, tcx, gpx, kml or csv
   --verbose             Enable debug logging
   --help                Show this message
@@ -169,6 +171,12 @@ coros-backup --format fit --format tcx --format gpx
 
 # Enable verbose output
 coros-backup --backup-dir ~/coros --verbose
+
+# Backup a US region account
+coros-backup --region us
+
+# Point at a custom API host (overrides --region)
+coros-backup --base-url https://teamapi.coros.com
 ```
 
 ## Architecture Notes

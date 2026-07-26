@@ -53,7 +53,7 @@ class CorosClient:
         self,
         email: str,
         password: str,
-        base_url: str,
+        base_url: str = "https://teameuapi.coros.com",
         timeout: int = 30,
     ):
         self.email = email
