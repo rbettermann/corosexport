@@ -8,9 +8,18 @@ from typing import Optional
 
 import click
 
-from corosexport.client import CorosClient, CorosAuthError, CorosAPIError
+from corosexport.client import (
+    CorosClient,
+    CorosAuthError,
+    CorosAPIError,
+)
 from corosexport.backup import BackupManager
 from corosexport.models import ExportFormat
+
+REGION_HOSTS = {
+    "eu": "https://teameuapi.coros.com",
+    "us": "https://teamapi.coros.com",
+}
 
 # Configure logging
 logging.basicConfig(
@@ -40,6 +49,17 @@ logger = logging.getLogger(__name__)
     help="Coros account password (prompts if not provided)",
 )
 @click.option(
+    "--region",
+    type=click.Choice(["eu", "us"], case_sensitive=False),
+    default="eu",
+    help="Coros account region (default: eu)",
+)
+@click.option(
+    "--base-url",
+    default=None,
+    help="Override the API host directly. Takes precedence over --region.",
+)
+@click.option(
     "--format",
     multiple=True,
     type=click.Choice(["fit", "tcx", "gpx", "json"], case_sensitive=False),
@@ -55,6 +75,8 @@ def main(
     backup_dir: str,
     email: str,
     password: Optional[str],
+    region: str,
+    base_url: Optional[str],
     format: tuple[str],
     verbose: bool,
 ) -> int:
@@ -85,11 +107,17 @@ def main(
     except ValueError as e:
         click.echo(f"Error: Invalid format - {e}", err=True)
         return 1
-    
+
+    if base_url:
+        client_base_url = base_url.rstrip("/")
+    else:
+        client_base_url = REGION_HOSTS[region]
+
     # Create client and authenticate
     try:
         click.echo("Authenticating with Coros...")
-        client = CorosClient(email=email, password=password)
+        client = CorosClient(email=email, password=password,
+                              base_url=client_base_url)
         client.authenticate()
     except CorosAuthError as e:
         click.echo(f"Authentication failed: {e}", err=True)
