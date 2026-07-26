@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.1.5] - 2026-07-26
+
+### Added
+- Support for region backends (us, eu), thanks @jackdeansmith
+
 ## [0.1.4] - 2026-05-29
 
 ### Added
